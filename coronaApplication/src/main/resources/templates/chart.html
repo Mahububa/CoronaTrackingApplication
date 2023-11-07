@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>COVID-19 Data Chart</title>
+    <!-- Include Chart.js script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+   
+</head>
+<body style="background-color:powderblue;">
+    <div class="container">
+        <h1>Covid Chart</h1>
+       
+        <canvas id="barChart" width="400" height="200"></canvas>
+    </div>
+
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+         var countryName = /*[[${countryName}]]*/ '';
+         var countryId = /*[[${countryId}]]*/ '';
+        var locationStatesData = /*[[${LocationStates}]]*/ [];
+
+        function generateChart() {
+            var labels = [];
+            var data = [];
+            var backgroundColors = [];
+            var colors = [
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(255, 205, 86, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 159, 64, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(255, 0, 0, 0.6)',      // Red
+                'rgba(255, 165, 0, 0.6)',  // Orange
+                'rgba(255, 255, 0, 0.6)'   // Yellow
+                
+            ];
+
+            for (var i = 0; i < locationStatesData.length; i++) {
+                labels.push(locationStatesData[i].country);
+                data.push(locationStatesData[i].latestTotalDeaths);
+                backgroundColors.push(colors[i % colors.length]); // Cycle through colors
+            }
+
+            var ctx = document.getElementById("barChart").getContext("2d");
+            var myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Death Count",
+                        data: data,
+                        backgroundColor: backgroundColors, 
+                        borderColor: "RGB(192, 75, 75, 1)",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+         function getRandomColor() {
+            var letters = "0123456789ABCDEF";
+            var color = "#";
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+            }
+
+        
+        generateChart();
+        /*]]>*/
+    </script>
+</body>
+</html>
